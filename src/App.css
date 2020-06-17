@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  background-color: yellow;
 }
 
 .App-logo {
@@ -35,4 +36,11 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.newItemBtn {
+  position: fixed;
+  bottom: 5%;
+  right: 5%;
+  background-color: red;
 }

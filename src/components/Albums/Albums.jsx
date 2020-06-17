@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import {
   Container,
   Row,
@@ -13,17 +14,19 @@ import {
   CardTitle,
   Input,
   ModalFooter,
+  Alert,
 } from "reactstrap";
 import { AiFillPlusCircle } from "react-icons/ai";
-import axios from "axios";
+import { RiEmotionSadLine } from "react-icons/ri";
+import CardPic from "../../assets/mosaic.jpg";
+import { consts } from "../../utils/consts";
 import withSidebar from "../../hocs/withSidebar";
 import AlbumCard from "./AlbumCard/AlbumCard";
-import { consts } from "../../utils/API";
 
 const Albums = (props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [title, setTitle] = useState("");
-
+  const [error, setError] = useState(null);
   const toggle = () => setIsModalOpen(!isModalOpen);
 
   const createAlbum = () => {
@@ -32,19 +35,18 @@ const Albums = (props) => {
       .map((album) => album.id)
       .sort((a, b) => (a < b ? 1 : -1))[0];
     data.id = lastObject.id + 1;
-    console.log("data", data);
     data.userId = props.album[0].userId;
+
     axios
       .post(`${consts.baseUrl}/albums`, data)
       .then((response) => {
-        console.log("res", response);
         if (response.status === 201) {
           setIsModalOpen(false);
           props.fetchAlbums(data.userId);
         }
       })
       .catch((err) => {
-        console.log("err", err);
+        setError(err.message);
       });
   };
 
@@ -61,7 +63,7 @@ const Albums = (props) => {
       </Row>
       <Row>
         <Col>
-          <Button className="fixed-bottom" onClick={() => setIsModalOpen(true)}>
+          <Button className="newItemBtn" onClick={() => setIsModalOpen(true)}>
             {" "}
             <AiFillPlusCircle />
           </Button>
@@ -71,8 +73,14 @@ const Albums = (props) => {
         <ModalHeader toggle={toggle}>Create new Album </ModalHeader>
         <ModalBody>
           <Col lg={{ size: 8, offset: 2 }}>
-            <Card key="1">
-              <CardImg top width="100%" alt="Card image cap" />
+            {error ? (
+              <Alert color="danger">
+                <RiEmotionSadLine />
+                {error}
+              </Alert>
+            ) : null}
+            <Card>
+              <CardImg top width="100%" src={CardPic} alt="Card image cap" />
               <CardBody>
                 <CardTitle>
                   <Input

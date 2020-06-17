@@ -1,4 +1,70 @@
-/* button {
-  position: absolute;
+.newItemBtn {
+  position: fixed;
   bottom: 5%;
-} */
+  right: 5%;
+  background-color: #df267a !important;
+}
+
+.spinner {
+  height: 100vh;
+  line-height: 100vh;
+  text-align: center;
+}
+
+.error {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  padding: 10px 30px;
+}
+
+/*Card styling*/
+
+.card-body {
+  position: relative !important;
+  min-height: 150px !important;
+}
+
+.card-subtitle {
+  max-height: 200px;
+  margin-bottom: 25% !important;
+  overflow-y: scroll;
+}
+
+.bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 5% 0 5% 5%;
+  background-color: white;
+}
+
+/* The emerging W3C standard
+   that is currently Firefox-only */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c892b7 #eee;
+}
+
+/* Works on Chrome/Edge/Safari */
+*::-webkit-scrollbar {
+  width: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: #eee;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: #c892b7;
+
+  border: 2px solid #eee;
+}
+
+@media (max-width: 576px) {
+  * body,
+  .btn {
+    font-size: 0.85rem !important;
+  }
+}

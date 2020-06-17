@@ -1,30 +1,36 @@
 import React, { useState } from "react";
+import axios from "axios";
 import {
   Card,
   CardImg,
   CardBody,
-  CardTitle,
   CardSubtitle,
   Button,
   Col,
   Row,
+  Modal,
+  ModalHeader,
+  ModalFooter,
 } from "reactstrap";
+import { consts } from "../../../utils/consts";
 import { GoTrashcan } from "react-icons/go";
-import MyModal from "../NewAlbumModal/NewAlbumModal";
-import axios from "axios";
-import { consts } from "../../../utils/API";
-import CardPic from "../../../assets/mosaic.png";
+import CardPic from "../../../assets/mosaic.jpg";
+
+import EditAlbum from "./../EditAlbum/EditAlbum";
 
 const AlbumCard = (props) => {
-  // const baseUrl = "http://localhost:4000";
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isRemoveOpen, setIsRemoveOpen] = useState(false);
   const [editedAlbum, setEditedAlbum] = useState({});
+  const [idToRemove, setIdToRemove] = useState(null);
+
   const changeModalFlag = (flag) => {
     setIsModalOpen(flag);
   };
 
+  const toggle = () => setIsRemoveOpen(!isRemoveOpen);
+
   const editAlbumHandler = (data) => {
-    console.log("data", data);
     axios
       .put(`${consts.baseUrl}/albums/${data.id}`, data)
       .then((response) => {
@@ -39,44 +45,64 @@ const AlbumCard = (props) => {
       });
   };
 
+  const startDelete = (id) => {
+    setIdToRemove(id);
+    setIsRemoveOpen(true);
+  };
+
   return (
     <Row>
       {props.albums.map((album) => (
-        <Col lg="3" md="4" sm="6" xs="12" className="card-deck">
+        <Col lg="3" md="4" sm="6" xs="12" className="card-deck" key={album.id}>
           <Card className="my-sm-2" key={album.id}>
             <CardImg top width="100%" src={CardPic} alt="Card image cap" />
-            <CardBody>
-              <CardTitle>{album.title}</CardTitle>
-              <CardSubtitle>{album.id}</CardSubtitle>{" "}
-              <Button
-                onClick={() => {
-                  setEditedAlbum(album);
-                  setIsModalOpen(true);
-                }}
-                size="sm"
-                color="info"
-              >
-                Edit
-              </Button>
-              <Button
-                className="float-right "
-                size="sm"
-                onClick={() => props.remove(album.id)}
-              >
-                <GoTrashcan />
-              </Button>
+            <CardBody className=" p-1">
+              <CardSubtitle className="p-2">{album.title}</CardSubtitle>{" "}
+              <div className="bottom pr-2">
+                <Button
+                  onClick={() => {
+                    setEditedAlbum(album);
+                    setIsModalOpen(true);
+                  }}
+                  size="sm"
+                >
+                  Edit
+                </Button>
+                <Button
+                  className="float-right"
+                  size="sm"
+                  onClick={() => startDelete(album.id)}
+                >
+                  <GoTrashcan />
+                </Button>
+              </div>
             </CardBody>
           </Card>
         </Col>
       ))}
-      {editedAlbum ? (
-        <MyModal
-          album={editedAlbum}
-          isModalOpen={isModalOpen}
-          edit={editAlbumHandler}
-          changeModalFlag={changeModalFlag}
-        />
-      ) : null}
+      <>
+        {editedAlbum ? (
+          <EditAlbum
+            album={editedAlbum}
+            isModalOpen={isModalOpen}
+            edit={editAlbumHandler}
+            changeModalFlag={changeModalFlag}
+          />
+        ) : null}
+        <Modal isOpen={isRemoveOpen} toggle={toggle}>
+          <ModalHeader toggle={toggle}>
+            Are you sure you want to delete?
+          </ModalHeader>
+          <ModalFooter>
+            <Button onClick={() => props.remove(idToRemove)} size="sm">
+              Delete
+            </Button>
+            <Button size="sm" color="secondary" onClick={toggle}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </Modal>
+      </>
     </Row>
   );
 };

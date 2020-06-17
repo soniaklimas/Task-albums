@@ -10,12 +10,11 @@ import {
   CardBody,
   CardImg,
   CardTitle,
-  CardSubtitle,
   Input,
 } from "reactstrap";
-import CardPic from "../../../assets/mosaic.png";
+import CardPic from "../../../assets/mosaic.jpg";
 
-const MyModal = (props) => {
+const EditAlbum = (props) => {
   const { className } = props;
   const [title, setTitle] = useState(props.album.title);
   const toggle = () => props.changeModalFlag(!props.isModalOpen);
@@ -30,7 +29,7 @@ const MyModal = (props) => {
         <ModalHeader toggle={toggle}>Edit Album </ModalHeader>
         <ModalBody>
           <Col lg={{ size: 8, offset: 2 }}>
-            <Card key="1">
+            <Card>
               <CardImg top width="100%" src={CardPic} alt="Card image cap" />
               <CardBody>
                 <CardTitle>
@@ -40,7 +39,6 @@ const MyModal = (props) => {
                     onChange={(e) => setTitle(e.target.value)}
                   />
                 </CardTitle>
-                <CardSubtitle>1</CardSubtitle>
               </CardBody>
             </Card>
           </Col>
@@ -67,4 +65,4 @@ const MyModal = (props) => {
   );
 };
 
-export default MyModal;
+export default EditAlbum;
